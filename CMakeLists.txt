@@ -9,8 +9,6 @@ find_package(Vulkan REQUIRED)
 
 # make project executable
 add_executable(alcheminer src/main.cpp
-        src/Engine/engine.cpp
-        src/Engine/engine.h
         src/Engine/renderer.cpp
         src/Engine/renderer.h)
 
