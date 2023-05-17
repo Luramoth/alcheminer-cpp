@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.25)
-project(Alcheminer_cpp)
+project(alcheminer)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Alcheminer_cpp src/main.cpp)
+#find libraries
+find_package(glfw3 3.3 REQUIRED)
+find_package(Vulkan REQUIRED)
+
+# make project executable
+add_executable(alcheminer src/main.cpp)
+
+# link libraries
+target_link_libraries(alcheminer PRIVATE glfw Vulkan::Vulkan)
