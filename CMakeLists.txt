@@ -8,7 +8,11 @@ find_package(glfw3 3.3 REQUIRED)
 find_package(Vulkan REQUIRED)
 
 # make project executable
-add_executable(alcheminer src/main.cpp)
+add_executable(alcheminer src/main.cpp
+        src/AlchWindow.cpp
+        src/AlchWindow.h
+        src/app.cpp
+        src/app.h)
 
 # link libraries
 target_link_libraries(alcheminer PRIVATE glfw Vulkan::Vulkan)
