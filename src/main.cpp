@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
+#include <vector>
 
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
@@ -70,13 +71,24 @@ private:
         // GLFW extension info for Vulkan to interface
         uint32_t glfwExtensionCount = 0;
         const char** glfwExtensions;
+        std::vector<const char*> requiredExtensions;
 
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-        createInfo.enabledExtensionCount = glfwExtensionCount;
-        createInfo.ppEnabledExtensionNames = glfwExtensions;
+        for (uint32_t i = 0; i < glfwExtensionCount; i++) {
+            requiredExtensions.emplace_back(glfwExtensions[i]);
+        }
 
-        // layers
+        // to help with moltenVK
+        requiredExtensions.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+
+        createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+
+        // add extensions to instance
+        createInfo.enabledLayerCount = (uint32_t) requiredExtensions.size();
+        createInfo.ppEnabledExtensionNames = requiredExtensions.data();
+
+        // validation layers
         createInfo.enabledLayerCount = 0;
         ////
 
