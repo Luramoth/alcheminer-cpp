@@ -15,9 +15,9 @@ namespace alchemy {
         AlchWindow(int w, int h, std::string name);
         ~AlchWindow();
 
-        // some memory safety I don't fully understand
-        AlchWindow(const AlchWindow &) = delete;
-        AlchWindow &operator=(const AlchWindow &) = delete;
+        // prevent the AlchWindow object from being copied in any way
+        AlchWindow(const AlchWindow &) = delete;// prevents the copy constructor from running
+        AlchWindow &operator=(const AlchWindow &) = delete;// prevents copying of the object using the = operator
 
         // function is only one line so it seems ok just to make it inline
         bool shouldClose() { return glfwWindowShouldClose(window); }
