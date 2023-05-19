@@ -8,3 +8,7 @@
 
 ### Arch:
 `sudo pacman -S vulkan-devel glfw-wayland glfw-x11 glm shaderc libxi libxxf86vm`
+
+## building:
+before using cmake to compile the whole program vulkan requires that the shaders get
+compiled, it's recommended you use glslc and execute the bash script `shade_compile.sh`
