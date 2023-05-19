@@ -7,6 +7,8 @@
 
 #include "AlchWindow.h"
 
+#include <stdexcept>
+
 namespace alchemy {
     AlchWindow::AlchWindow(int w, int h, std::string name) : width{w}, height{h}, windowName{name} {
         initWindow();
@@ -15,6 +17,12 @@ namespace alchemy {
     AlchWindow::~AlchWindow() {
         glfwDestroyWindow(window);// destroy and deallocate the window
         glfwTerminate();// get glfw to shove off
+    }
+
+    void AlchWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface) {
+        if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create window surface");
+        }
     }
 
     void AlchWindow::initWindow() {

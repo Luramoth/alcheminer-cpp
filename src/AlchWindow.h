@@ -22,6 +22,8 @@ namespace alchemy {
         // function is only one line so it seems ok just to make it inline
         bool shouldClose() { return glfwWindowShouldClose(window); }
 
+        void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
+
     private:
         void initWindow();
 

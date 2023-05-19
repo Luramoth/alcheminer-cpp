@@ -7,8 +7,9 @@
 #include <iostream>
 
 namespace alchemy {
-    AlchPipeline::AlchPipeline(const std::string vertFilePath, const std::string fragFilePath) {
-        createGraphicsPipeline(vertFilePath, fragFilePath);
+    AlchPipeline::AlchPipeline(AlchDevice& device, const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo) : alchDevice{device} {
+
+        createGraphicsPipeline(vertFilePath, fragFilePath, configInfo);
     }
 
     std::vector<char> AlchPipeline::readFile(const std::string filePath) {
@@ -30,7 +31,7 @@ namespace alchemy {
         return buffer;
     }
 
-    void AlchPipeline::createGraphicsPipeline(const std::string vertFilePath, const std::string fragFilePath) {
+    void AlchPipeline::createGraphicsPipeline(const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo) {
 
         // read out shader code
         auto vertCode = readFile(vertFilePath);
@@ -38,5 +39,22 @@ namespace alchemy {
 
         std::cout << "Vertex shader file size: " << vertCode.size() << '\n';
         std::cout << "Fragment shader file size: " << fragCode.size() << '\n';
+    }
+
+    void AlchPipeline::createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule) {
+        VkShaderModuleCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+        createInfo.codeSize = code.size();
+        createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+
+        if (vkCreateShaderModule(alchDevice.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS){
+            throw std::runtime_error("failed to create shader module");
+        }
+    }
+
+    PipelineConfigInfo AlchPipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height) {
+        PipelineConfigInfo configInfo{};
+
+        return configInfo;
     }
 } // alchemy
