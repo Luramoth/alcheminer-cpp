@@ -12,7 +12,9 @@ add_executable(alcheminer src/main.cpp
         src/AlchWindow.cpp
         src/AlchWindow.h
         src/app.cpp
-        src/app.h)
+        src/app.h
+        src/AlchPipeline.cpp
+        src/AlchPipeline.h)
 
 # link libraries
 target_link_libraries(alcheminer PRIVATE glfw Vulkan::Vulkan)

@@ -6,6 +6,7 @@
 #define ALCHEMINER_APP_H
 
 #include "AlchWindow.h"
+#include "AlchPipeline.h"
 
 namespace alchemy {
 
@@ -18,6 +19,7 @@ namespace alchemy {
 
     private:
         AlchWindow alchWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
+        AlchPipeline alchPipeline{"./shaders/simple.vert.spv", "./shaders/simple.frag.spv"};
     };
 
 } // alchemy
