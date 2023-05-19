@@ -19,6 +19,7 @@ namespace alchemy {
         AlchWindow(const AlchWindow &) = delete;
         AlchWindow &operator=(const AlchWindow &) = delete;
 
+        // function is only one line so it seems ok just to make it inline
         bool shouldClose() { return glfwWindowShouldClose(window); }
 
     private:
