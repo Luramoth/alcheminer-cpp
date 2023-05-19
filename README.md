@@ -12,3 +12,7 @@
 ## building:
 before using cmake to compile the whole program vulkan requires that the shaders get
 compiled, it's recommended you use glslc and execute the bash script `shade_compile.sh`
+
+### on ubuntu:
+download glslc through [this link](https://github.com/google/shaderc#downloads) from the official
+glslc GitHub repo
