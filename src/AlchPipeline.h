@@ -35,7 +35,7 @@ namespace alchemy {
                 const std::string& fragFilePath,
                 const PipelineConfigInfo&);
 
-        ~AlchPipeline() {};
+        ~AlchPipeline();
 
         // same memory safty stuff defined in AlchWindow.h
         AlchPipeline(const AlchPipeline&) = delete;
