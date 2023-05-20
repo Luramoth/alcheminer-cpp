@@ -65,7 +65,7 @@ class AlchSwapChain {
   std::vector<VkImage> swapChainImages;
   std::vector<VkImageView> swapChainImageViews;
 
-  MyEngineDevice &device;
+  AlchDevice &device;
   VkExtent2D windowExtent;
 
   VkSwapchainKHR swapChain;

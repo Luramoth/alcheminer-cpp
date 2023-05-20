@@ -5,9 +5,9 @@
 #ifndef ALCHEMINER_APP_H
 #define ALCHEMINER_APP_H
 
-#include "AlchDevice.h"
-#include "AlchPipeline.h"
-#include "AlchWindow.h"
+#include "AlchemyEngine/AlchDevice.h"
+#include "AlchemyEngine/AlchPipeline.h"
+#include "AlchemyEngine/AlchWindow.h"
 
 namespace alchemy {
 

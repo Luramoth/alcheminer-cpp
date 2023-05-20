@@ -9,15 +9,15 @@ find_package(Vulkan REQUIRED)
 
 # make project executable
 add_executable(alcheminer src/main.cpp
-        src/AlchWindow.cpp
-        src/AlchWindow.h
+        src/AlchemyEngine/AlchWindow.cpp
+        src/AlchemyEngine/AlchWindow.h
         src/app.cpp
         src/app.h
-        src/AlchPipeline.cpp
-        src/AlchPipeline.h
-        src/AlchDevice.cpp
-        src/AlchSwapChain.h
-        src/AlchSwapChain.cpp)
+        src/AlchemyEngine/AlchPipeline.cpp
+        src/AlchemyEngine/AlchPipeline.h
+        src/AlchemyEngine/AlchDevice.cpp
+        src/AlchemyEngine/AlchSwapChain.h
+        src/AlchemyEngine/AlchSwapChain.cpp)
 
 # link libraries
 target_link_libraries(alcheminer PRIVATE glfw Vulkan::Vulkan)
