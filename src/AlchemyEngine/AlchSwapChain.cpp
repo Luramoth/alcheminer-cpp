@@ -369,6 +369,12 @@ VkSurfaceFormatKHR AlchSwapChain::chooseSwapSurfaceFormat(
   return availableFormats[0];
 }
 
+// Fifo: the gpu will only render one buffer pr vertical interval which can cause lots idleing and waste perfromance
+//
+// Mailbox: the GPU never idles and if it finishes on one buffer it will immidiately
+// overwrite the old one and the GPU will select the most recent image buffer on each vertical sync causing less latency
+//
+// Immidiate: no V-sync at all and it renders frames even if they arent completed
 VkPresentModeKHR AlchSwapChain::chooseSwapPresentMode(
     const std::vector<VkPresentModeKHR> &availablePresentModes) {
   for (const auto &availablePresentMode : availablePresentModes) {

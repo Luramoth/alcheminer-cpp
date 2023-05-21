@@ -7,7 +7,12 @@
 
 #include "AlchemyEngine/AlchDevice.h"
 #include "AlchemyEngine/AlchPipeline.h"
+#include "AlchemyEngine/AlchSwapChain.h"
 #include "AlchemyEngine/AlchWindow.h"
+
+//std
+#include <memory>
+#include <vector>
 
 namespace alchemy {
 
@@ -16,12 +21,26 @@ namespace alchemy {
         static constexpr int WIDTH = 800;
         static constexpr int HEIGHT = 600;
 
+        app();
+        ~app();
+
+        app(const app &) = delete;// prevents the copy constructor from running
+        app &operator=(const app &) = delete;// prevents copying of the object using the = operator
+
         void run();
 
     private:
+        void createPipelineLayout();
+        void createpipeline();
+        void createCommandbuffers();
+        void drawFrame();
+
         AlchWindow alchWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
         AlchDevice alchDevice{alchWindow};
-        AlchPipeline alchPipeline{alchDevice,"./shaders/simple.vert.spv", "./shaders/simple.frag.spv", AlchPipeline::defaultPipelineConfigInfo(WIDTH,HEIGHT)};
+        AlchSwapChain alchSwapChain{alchDevice, alchWindow.getExtent()};
+        std::unique_ptr<AlchPipeline> alchPipeline;
+        VkPipelineLayout pipelineLayout;
+        std::vector<VkCommandBuffer> commandBuffers;
     };
 
 } // alchemy
