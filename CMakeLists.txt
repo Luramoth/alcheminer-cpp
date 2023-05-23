@@ -3,21 +3,29 @@ project(alcheminer)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Genorate compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Grab OGRE as a dependency
+find_package(OGRE REQUIRED COMPONENTS Bites CONFIG)
+
+# set the build directory to build/
+if(NOT EXISTS ${CMAKE_BINARY_DIR})
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR})
+endif()
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
+
 #find libraries
 find_package(glfw3 3.3 REQUIRED)
-find_package(Vulkan REQUIRED)
 
 # make project executable
-add_executable(alcheminer src/main.cpp
-        src/AlchemyEngine/AlchWindow.cpp
-        src/AlchemyEngine/AlchWindow.h
-        src/app.cpp
-        src/app.h
-        src/AlchemyEngine/AlchPipeline.cpp
-        src/AlchemyEngine/AlchPipeline.h
-        src/AlchemyEngine/AlchDevice.cpp
-        src/AlchemyEngine/AlchSwapChain.h
-        src/AlchemyEngine/AlchSwapChain.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp)
 
-# link libraries
-target_link_libraries(alcheminer PRIVATE glfw Vulkan::Vulkan)
+# includes ogre and its dependencies
+target_link_libraries(${PROJECT_NAME} OgreBites)
+
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build )
+
+# Set the path to the Clang compiler
+set(CMAKE_C_COMPILER "/usr/bin/clang")
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
