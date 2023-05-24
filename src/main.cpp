@@ -1,65 +1,51 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <Ogre.h>
-#include <OgreApplicationContext.h>
-#include <OgreInput.h>
-#include <OgreRTShaderSystem.h>
-
-class KeyHandler : public OgreBites::InputListener {
-    bool keyPressed(const OgreBites::KeyboardEvent& evt) override {
-        if (evt.keysym.sym == OgreBites::SDLK_ESCAPE) {
-            Ogre::Root::getSingleton().queueEndRendering();
-        }
-        return true;
-    }
-};
+#include <raylib.h>
+#include <raymath.h>
 
 int main() {
     std::cout << "Hello World!\n";
 
-    OgreBites::ApplicationContext ctx("Alcheminer");
-    ctx.initApp();
+    int width = 800;
+    int height = 450;
+    InitWindow(width, height, "Alcheminer");
 
-    // get pointer to the already made root
-    Ogre::Root* root = ctx.getRoot();
-    Ogre::SceneManager* scnMgr = root->createSceneManager();
+    Camera3D camera;
+    camera.position = (Vector3){0, 10,10};
+    camera.target = (Vector3){0, 0, 0,};
+    camera.up = (Vector3){0, 1, 0};
+    camera.fovy = 45;
+    camera.projection = CAMERA_PERSPECTIVE;
 
-    // register the scene with RTSS
-    Ogre::RTShader::ShaderGenerator* shaderGen =  Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-    shaderGen->addSceneManager(scnMgr);
+    Model cubeModel = LoadModelFromMesh(GenMeshCube(2, 2, 2));
+    Vector3 cubePosition = {0, 0, 0};
 
-    // let there be light
-    Ogre::Light* light = scnMgr->createLight("MainLight");
-    Ogre::SceneNode* lightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
-    lightNode->setPosition(0, 0, 15);
-    lightNode->attachObject(light);
+    SetCameraMode(camera, CAMERA_FREE);
 
-    // also need to tell Ogre where we are
-    Ogre::SceneNode* camNode = scnMgr->getRootSceneNode()->createChildSceneNode();
-    camNode->setPosition(0, 0, 15);
-    camNode->lookAt(Ogre::Vector3(0, 0, -1), Ogre::Node::TS_PARENT);
+    SetTargetFPS(60);
 
-    // create the camera
-    Ogre::Camera* cam = scnMgr->createCamera("myCam");
-    cam->setNearClipDistance(5);
-    cam->setAutoAspectRatio(true);
-    camNode->attachObject(cam);
+    while (!WindowShouldClose()) {
+        UpdateCamera(&camera);
 
-    // tell it to render into the scene view
-    ctx.getRenderWindow()->addViewport(cam);
+        // rotate cube
+        cubeModel.transform = MatrixMultiply(cubeModel.transform, MatrixRotateY(DEG2RAD * 1));
 
-    // add something to render
-    Ogre::Entity* ent = scnMgr->createEntity("Sinbad.mesh");
-    Ogre::SceneNode* node = scnMgr->getRootSceneNode()->createChildSceneNode();
-    node->attachObject(ent);
+        BeginDrawing();
+        {
+                ClearBackground(RAYWHITE);
 
-    // reister for input events
-    KeyHandler keyHandler;
-    ctx.addInputListener(&keyHandler);
+                BeginMode3D(camera);
+                {
+                        DrawModel(cubeModel, cubePosition, 1, RED);
+                }
+                EndMode3D();
+        }
+        EndDrawing();
+    }
 
-    ctx.getRoot()->startRendering();
-    ctx.closeApp();
+    UnloadModel(cubeModel);
+    CloseWindow();
 
     return EXIT_SUCCESS;
 }
