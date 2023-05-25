@@ -13,7 +13,7 @@ if (NOT raylib_FOUND)
     FetchContent_Declare(
             raylib
             GIT_REPOSITORY https://github.com/raysan5/raylib.git
-            GIT_TAG 4.2.0
+            GIT_TAG 4.5.0
     )
     FetchContent_MakeAvailable(raylib)
 endif()
@@ -25,7 +25,9 @@ endif()
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 
 # make project executable
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/rlFPCamera.cpp
+        src/rlFPCamera.h)
 
 # includes ogre and its dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
