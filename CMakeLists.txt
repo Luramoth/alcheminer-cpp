@@ -26,8 +26,9 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 
 # make project executable
 add_executable(${PROJECT_NAME} src/main.cpp
-        src/rlFPCamera.c
-        src/rlFPCamera.h)
+        src/rlFPCamera.cpp
+        src/rlFPCamera.h
+)
 
 # includes ogre and its dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
