@@ -16,11 +16,13 @@ int main() {
     InitWindow(width, height, "Alcheminer");
 
     rlFPCamera cam;
-    rlFPCameraInit(&cam, 45, (Vector3){0, 0, -10});
-    cam.MoveSpeed.z = 10;
-    cam.MoveSpeed.x = 5;
+    rlFPCameraInit(&cam, 75, (Vector3){0, 0, -10});
+    cam.MoveSpeed.z = 20;
+    cam.MoveSpeed.x = 15;
 
     cam.FarPlane = 5000;
+
+    cam.AllowFlight = true;
 
     Model cubeModel = LoadModelFromMesh(GenMeshCube(2, 2, 2));
     Vector3 cubePosition = {0, 0, 0};
