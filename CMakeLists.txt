@@ -41,6 +41,20 @@ if (${PLATFORM} STREQUAL "Web")
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
 endif()
 
+# Checks if OSX and links appropriate frameworks (Only required on MacOS)
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} "-framework IOKit")
+    target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
+    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+endif()
+
 # Set the path to the Clang compiler
 set(CMAKE_C_COMPILER "/usr/bin/clang")
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+
+# if in release have the shaders path be relative to the executable, otherwise to the dev mechine
+if (CMAKE_BUILD_TYPE EQUAL "RELEASE")
+    target_compile_definitions(${PROJECT_NAME} PUBLIC ALCH_SHADERS_PATH="./shaders")
+else ()
+    target_compile_definitions(${PROJECT_NAME} PUBLIC ALCH_SHADERS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/shaders/")
+endif ()
