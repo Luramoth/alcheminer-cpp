@@ -17,8 +17,8 @@ int main() {
 
     rlFPCamera cam;
     rlFPCameraInit(&cam, 75, (Vector3){0, 0, -10});
-    cam.MoveSpeed.z = 20;
-    cam.MoveSpeed.x = 15;
+    cam.MoveSpeed.z = 30;
+    cam.MoveSpeed.x = 25;
 
     cam.FarPlane = 5000;
 
