@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <raymath.h>
+#include <rlgl.h>
 
 #include "rlFPCamera.h"
 
@@ -23,6 +24,12 @@ int main() {
     cam.FarPlane = 5000;
 
     cam.AllowFlight = true;
+
+    char *MCComputeCode = LoadFileText(ALCH_SHADERS_PATH"MarchingCubes.glsl");
+    unsigned int MCCShader = rlCompileShader(MCComputeCode, RL_COMPUTE_SHADER);
+    unsigned int MCCProgram = rlLoadComputeShaderProgram(MCCShader);
+    UnloadFileText(MCComputeCode);
+
 
     Model cubeModel = LoadModelFromMesh(GenMeshCube(2, 2, 2));
     Vector3 cubePosition = {0, 0, 0};
