@@ -95,6 +95,10 @@ void graphicsInit(){
     // we don't need the shaders anymore since they are in the program so delete them
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+
+    //// linking vertex attributes
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3* sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 }
 
 ////////////////////////////////// MAIN FUNCTION //////////////////////////////////
