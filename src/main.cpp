@@ -1,62 +1,60 @@
-#include <cstdlib>
 #include <iostream>
 
-#include <raylib.h>
-#include <raymath.h>
-#include <rlgl.h>
+#include "include/glad/glad.h"
+#include <GLFW/glfw3.h>
 
-#include "rlFPCamera.h"
+void framebuffer_size_callback(GLFWwindow* window, int width, int height){
+    glViewport(0, 0, width, height);
+}
 
+void processInput(GLFWwindow *window){
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
+////////////////////////////////// MAIN FUNCTION //////////////////////////////////
 int main() {
-    std::cout << "Hello World!\n";
+    ////////////// get window working
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
-    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Alcheminer", NULL, NULL);
+    if (window == NULL){
+        std::cout << "Failed to create window\n";
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
 
-    int width = 800;
-    int height = 450;
-    InitWindow(width, height, "Alcheminer");
-
-    rlFPCamera cam;
-    rlFPCameraInit(&cam, 75, (Vector3){0, 0, -10});
-    cam.MoveSpeed.z = 30;
-    cam.MoveSpeed.x = 25;
-
-    cam.FarPlane = 5000;
-
-    cam.AllowFlight = true;
-
-    char *MCComputeCode = LoadFileText(ALCH_SHADERS_PATH"MarchingCubes.glsl");
-    unsigned int MCCShader = rlCompileShader(MCComputeCode, RL_COMPUTE_SHADER);
-    unsigned int MCCProgram = rlLoadComputeShaderProgram(MCCShader);
-    UnloadFileText(MCComputeCode);
-
-
-    Model cubeModel = LoadModelFromMesh(GenMeshCube(2, 2, 2));
-    Vector3 cubePosition = {0, 0, 0};
-
-    while (!WindowShouldClose()) {
-        rlFPCameraUpdate(&cam);
-
-        // rotate cube
-        cubeModel.transform = MatrixMultiply(cubeModel.transform, MatrixRotateY(DEG2RAD * 100 * GetFrameTime()));
-
-        BeginDrawing();
-        {
-            ClearBackground(RAYWHITE);
-
-            rlFPCameraBeginMode3D(&cam);
-            {
-                DrawModel(cubeModel, cubePosition, 1, RED);
-            }
-            rlFPCameraEndMode3D();
-
-            DrawFPS(10, 10);
-        }
-        EndDrawing();
+    ////////////// get GLAD working
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)){
+        std::cout << "failed to initialise GLAD\n";
+        return -1;
     }
 
-    UnloadModel(cubeModel);
-    CloseWindow();
+    // viewport stuff
+    glViewport(0, 0, 800, 600);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);// when window is resized, tell openGL about it
 
-    return EXIT_SUCCESS;
+    ////////////////////////////////// MAIN LOOP //////////////////////////////////
+    while(!glfwWindowShouldClose(window)){
+        // input
+        processInput(window);
+
+        // rendering commands
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // check and call events and swap the buffers
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
+    return 0;
 }
