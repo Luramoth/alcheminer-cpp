@@ -23,6 +23,11 @@ const char *fragmentShaderSource = "#version 450\n"
                                    "void main() {\n"
                                    "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
                                    "}\0";
+//// shader program
+unsigned int shaderProgram;
+
+//// vertex array object
+unsigned int VAO;
 
 /////////////////////// functions
 
@@ -74,10 +79,8 @@ void graphicsInit(){
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
-    //// shader program
-    unsigned int shaderProgram;
+    //// shader program init
     shaderProgram = glCreateProgram();
-
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
@@ -96,9 +99,18 @@ void graphicsInit(){
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    //// linking vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3* sizeof(float), (void*)0);
+    //// VAO initialisation
+    glGenVertexArrays(1, &VAO);
+
+    // 1. bind VAO
+    glBindVertexArray(VAO);
+    // 2. copy verticies array into a buffer for OpenGL to use
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // 3. set our vertex attributes pointers
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
 }
 
 ////////////////////////////////// MAIN FUNCTION //////////////////////////////////
@@ -140,6 +152,10 @@ int main() {
         // rendering commands
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // check and call events and swap the buffers
         glfwSwapBuffers(window);
