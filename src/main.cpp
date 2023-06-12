@@ -5,9 +5,14 @@
 
 /////////////////////// data
 float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f
+        0.5f,  0.5f, 0.0f,  // top right
+        0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f,  // bottom left
+        -0.5f,  0.5f, 0.0f   // top left
+};
+unsigned int indices[] = {  // note that we start from 0!
+        0, 1, 3,   // first triangle
+        1, 2, 3    // second triangle
 };
 
 const char *vertexShaderSource = "#version 450 core\n"
@@ -23,11 +28,17 @@ const char *fragmentShaderSource = "#version 450\n"
                                    "void main() {\n"
                                    "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
                                    "}\0";
+//// vertex buffer object
+unsigned int VBO;
+
 //// shader program
 unsigned int shaderProgram;
 
 //// vertex array object
 unsigned int VAO;
+
+//// element buffer object
+unsigned int EBO;
 
 /////////////////////// functions
 
@@ -41,12 +52,10 @@ void processInput(GLFWwindow *window){
 }
 
 void graphicsInit(){
-    //// vertex buffer object
-    unsigned int VBO;
+    //// vertex buffer object init
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    std::cout << "VBO ID: " << VBO << std::endl;
 
     //// shaders
     unsigned int vertexShader;
@@ -99,6 +108,9 @@ void graphicsInit(){
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    //// EBO initialisation
+    glGenBuffers(1, &EBO);
+
     //// VAO initialisation
     glGenVertexArrays(1, &VAO);
 
@@ -107,10 +119,12 @@ void graphicsInit(){
     // 2. copy verticies array into a buffer for OpenGL to use
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // 3. set our vertex attributes pointers
+    // 3. copy index array into an element buffer for OpenGL to use
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    // 4. set our vertex attributes pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
 }
 
 ////////////////////////////////// MAIN FUNCTION //////////////////////////////////
@@ -155,7 +169,8 @@ int main() {
 
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
 
         // check and call events and swap the buffers
         glfwSwapBuffers(window);
